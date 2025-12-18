@@ -551,9 +551,27 @@ Risk-Onフラグ（全て）:
   - Risk-On/Risk-Off判定、スリーブ別ゲート、Satellite M1/M2ゲート
 - `trading/tca/cost.py`
   - 期待コスト推定（ExpCost_bps）、許容コスト判定、TCA監視による回転抑制
+- `data_pipeline/ingest/spot.py`
+  - Spot CSVの取得（必須カラム検証）
+- `data_pipeline/normalize/spot.py`
+  - 通貨ペア正規化、型変換
+- `data_pipeline/qc/spot.py`
+  - 価格ギャップ検知、SpreadStress算出
+- `data_pipeline/store/spot.py`
+  - SQLiteへの保存（最小モデル、DuckDB/Parquetへ置換可能）
+- `data_pipeline/pipeline/run_spot_daily.py`
+  - 日次スポットパイプラインの統合実行
+- `ops/alerts/monitor.py`
+  - 監視アラート判定の最小ロジック
 
 ### 13.2 テスト
 - `tests/test_scoring.py`
 - `tests/test_gates.py`
 - `tests/test_cost.py`
+- `tests/test_ingest_spot.py`
+- `tests/test_normalize_spot.py`
+- `tests/test_qc_spot.py`
+- `tests/test_store_spot.py`
+- `tests/test_run_spot_daily.py`
+- `tests/test_monitor.py`
 
