@@ -606,6 +606,8 @@ Risk-Onフラグ（全て）:
   - 日次レポート（JSON）生成
 - `ops/alerts/run_daily_report.py`
   - 日次レポート（JSON/CSV）生成
+- `ops/repro/spot_repro.py`
+  - Spotパイプライン再現性チェック
 
 ### 13.2 テスト
 - `tests/test_scoring.py`
@@ -633,3 +635,4 @@ Risk-Onフラグ（全て）:
 - `tests/test_store_cost.py`
 - `tests/test_run_expected_cost_daily.py`
 - `tests/test_daily_report.py`
+- `tests/test_repro_spot.py`

@@ -1,4 +1,4 @@
-.PHONY: spot_pipeline forward_pipeline rates_pipeline vol_pipeline expected_cost_pipeline metrics_collect daily_report vol_metrics_pipeline
+.PHONY: spot_pipeline forward_pipeline rates_pipeline vol_pipeline cost_pipeline macro_pipeline daily_report repro_spot
 
 spot_pipeline:
 	python -m data_pipeline.pipeline.run_spot_daily --input $(INPUT) --db $(DB) --source $(SOURCE) --log $(LOG)
@@ -12,14 +12,14 @@ rates_pipeline:
 vol_pipeline:
 	python -m data_pipeline.pipeline.run_vol_daily --spot-db $(SPOT_DB) --db $(DB) --ts $(TS) --source $(SOURCE) --log $(LOG)
 
-vol_metrics_pipeline:
-	python -m data_pipeline.pipeline.run_vol_metrics_daily --spot-db $(SPOT_DB) --db $(DB) --ts $(TS) --source $(SOURCE) --log $(LOG)
-
-expected_cost_pipeline:
+cost_pipeline:
 	python -m data_pipeline.pipeline.run_expected_cost_daily --input $(INPUT) --db $(DB) --source $(SOURCE) --log $(LOG)
 
-metrics_collect:
-	python -m ops.alerts.collect_metrics --inputs $(INPUTS) --output $(OUTPUT)
+macro_pipeline:
+	python -m data_pipeline.pipeline.run_macro_daily --input $(INPUT) --db $(DB) --source $(SOURCE) --log $(LOG)
 
 daily_report:
 	python -m ops.alerts.daily_report --metrics $(METRICS) --report $(REPORT)
+
+repro_spot:
+	python -m ops.repro.spot_repro --input $(INPUT) --output $(OUTPUT)
