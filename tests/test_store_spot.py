@@ -13,14 +13,19 @@ class TestStoreSpot(unittest.TestCase):
         path = tmp.name
         rows = [
             {
-                "ts": "2025-01-01",
+                "ts": "2025-01-01T00:00:00Z",
                 "pair": "EURUSD",
                 "mid": 1.1,
                 "bid": 1.09,
                 "ask": 1.11,
+                "spread_bps": 18.18,
+                "broker": "demo",
                 "spread": 0.02,
                 "spread_stress": 1.0,
                 "gap_flag": False,
+                "duplicate_ts": False,
+                "non_monotonic_ts": False,
+                "time_gap_flag": False,
             }
         ]
         spot.init_db(path)

@@ -15,9 +15,9 @@ class TestRunSpotDaily(unittest.TestCase):
             db_path = os.path.join(d, "spot.db")
             log_path = os.path.join(d, "log.json")
             with open(input_path, "w", newline="") as f:
-                writer = csv.DictWriter(f, fieldnames=["ts", "pair", "mid", "bid", "ask"])
+                writer = csv.DictWriter(f, fieldnames=["timestamp", "symbol", "bid", "ask"])
                 writer.writeheader()
-                writer.writerow({"ts": "2025-01-01", "pair": "EURUSD", "mid": "1.1", "bid": "1.09", "ask": "1.11"})
+                writer.writerow({"timestamp": "2025-01-01T00:00:00Z", "symbol": "EURUSD", "bid": "1.09", "ask": "1.11"})
             cmd = [
                 sys.executable,
                 "-m",
@@ -30,6 +30,8 @@ class TestRunSpotDaily(unittest.TestCase):
                 "test",
                 "--log",
                 log_path,
+                "--config",
+                os.path.join("configs", "v1_0.yaml"),
             ]
             subprocess.check_call(cmd)
             with open(log_path, "r") as f:

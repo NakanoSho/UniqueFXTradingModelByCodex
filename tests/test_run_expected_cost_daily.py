@@ -43,6 +43,8 @@ class TestRunExpectedCostDaily(unittest.TestCase):
                 "test",
                 "--log",
                 log_path,
+                "--config",
+                os.path.join("configs", "v1_0.yaml"),
             ]
             subprocess.check_call(cmd)
             with open(log_path, "r") as f:

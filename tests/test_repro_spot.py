@@ -15,9 +15,9 @@ class TestReproSpot(unittest.TestCase):
             db1 = os.path.join(d, "spot1.db")
             db2 = os.path.join(d, "spot2.db")
             with open(input_path, "w", newline="") as f:
-                writer = csv.DictWriter(f, fieldnames=["ts", "pair", "mid", "bid", "ask"])
+                writer = csv.DictWriter(f, fieldnames=["timestamp", "symbol", "bid", "ask"])
                 writer.writeheader()
-                writer.writerow({"ts": "2025-01-01", "pair": "EURUSD", "mid": "1.1", "bid": "1.09", "ask": "1.11"})
+                writer.writerow({"timestamp": "2025-01-01T00:00:00Z", "symbol": "EURUSD", "bid": "1.09", "ask": "1.11"})
             cmd = [
                 sys.executable,
                 "-m",
@@ -32,6 +32,8 @@ class TestReproSpot(unittest.TestCase):
                 "test",
                 "--log",
                 out_path,
+                "--config",
+                os.path.join("configs", "v1_0.yaml"),
             ]
             subprocess.check_call(cmd)
             with open(out_path, "r") as f:

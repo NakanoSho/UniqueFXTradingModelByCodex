@@ -19,7 +19,8 @@ class TestDerivedDailyIntegration(unittest.TestCase):
 
     def _read_scores(self, base_dir, date):
         path = os.path.join(base_dir, "scores_daily", "v1_0", f"date={date}", "data.csv")
-        return read_csv(path)
+        rows = read_csv(path)
+        return sorted(rows, key=lambda r: (r.get("pair", ""), r.get("sleeve", "")))
 
     def _read_regime(self, base_dir, date):
         path = os.path.join(base_dir, "regime_daily", "v1_0", f"date={date}", "data.csv")
