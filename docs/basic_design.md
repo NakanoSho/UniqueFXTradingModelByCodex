@@ -541,7 +541,6 @@ Risk-Onフラグ（全て）:
     - 平滑化係数 ρ を20%引下げ
     - SatelliteのM2ゲート停止（M1まで）
 
-
 ## 13. 実装状況（v1.0 初期）
 
 ### 13.1 実装済みモジュール
@@ -562,8 +561,40 @@ Risk-Onフラグ（全て）:
   - SQLiteへの保存（最小モデル、DuckDB/Parquetへ置換可能）
 - `data_pipeline/pipeline/run_spot_daily.py`
   - 日次スポットパイプラインの統合実行
+- `data_pipeline/ingest/forward.py`
+  - 1MフォワードCSV取得
+- `data_pipeline/normalize/forward.py`
+  - フォワード正規化
+- `data_pipeline/qc/forward.py`
+  - フォワード整合QC（ln(F/S)の異常検知）
+- `data_pipeline/store/forward.py`
+  - フォワード保存（SQLite）
+- `data_pipeline/pipeline/run_forward_daily.py`
+  - 日次フォワードパイプライン
+- `data_pipeline/ingest/rates.py`
+  - 金利CSV取得
+- `data_pipeline/normalize/rates.py`
+  - 金利正規化
+- `data_pipeline/qc/rates.py`
+  - 金利QC
+- `data_pipeline/store/rates.py`
+  - 金利保存（SQLite）
+- `data_pipeline/pipeline/run_rates_daily.py`
+  - 日次金利パイプライン
+- `data_pipeline/features/volatility.py`
+  - FXVol20/VolJump/SpreadStressの計算
+- `data_pipeline/store/vol.py`
+  - ボラ指標の保存（SQLite）
+- `data_pipeline/pipeline/run_vol_daily.py`
+  - 日次ボラ指標パイプライン
+- `data_pipeline/store/cost.py`
+  - 期待コストの保存（SQLite）
+- `data_pipeline/pipeline/run_expected_cost_daily.py`
+  - 期待コストの算出パイプライン
 - `ops/alerts/monitor.py`
   - 監視アラート判定の最小ロジック
+- `ops/alerts/daily_report.py`
+  - 日次レポート（JSON）生成
 
 ### 13.2 テスト
 - `tests/test_scoring.py`
@@ -575,4 +606,23 @@ Risk-Onフラグ（全て）:
 - `tests/test_store_spot.py`
 - `tests/test_run_spot_daily.py`
 - `tests/test_monitor.py`
-
+- `tests/test_ingest_forward.py`
+- `tests/test_normalize_forward.py`
+- `tests/test_qc_forward.py`
+- `tests/test_store_forward.py`
+- `tests/test_run_forward_daily.py`
+- `tests/test_ingest_rates.py`
+- `tests/test_normalize_rates.py`
+- `tests/test_qc_rates.py`
+- `tests/test_store_rates.py`
+- `tests/test_run_rates_daily.py`
+- `tests/test_volatility.py`
+- `tests/test_store_vol.py`
+- `tests/test_run_vol_daily.py`
+- `tests/test_store_cost.py`
+- `tests/test_run_expected_cost_daily.py`
+- `tests/test_daily_report.py`
+- `tests/test_forward_pipeline.py`
+- `tests/test_rates_pipeline.py`
+- `tests/test_vol_metrics.py`
+- `tests/test_expected_cost_pipeline.py`
