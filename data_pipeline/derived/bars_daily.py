@@ -27,7 +27,7 @@ def ticks_to_daily_bars(
     close_time_utc: str,
     only_date: str | None = None,
 ) -> List[Dict[str, object]]:
-    close_parts = [int(x) for x in close_time_utc.split(":")]
+    close_parts = [int(x) for x in close_time_utc.split(":"))
     close_t = time(close_parts[0], close_parts[1], close_parts[2])
     grouped: Dict[Tuple[str, str], List[Dict[str, object]]] = {}
     for row in ticks:
