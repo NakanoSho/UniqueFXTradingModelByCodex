@@ -13,13 +13,14 @@ CREATE TABLE IF NOT EXISTS spot_data (
     mid REAL NOT NULL,
     bid REAL NOT NULL,
     ask REAL NOT NULL,
-    open REAL,
-    high REAL,
-    low REAL,
-    close REAL,
+    spread_bps REAL,
+    broker TEXT,
     spread REAL,
     spread_stress REAL,
     gap_flag INTEGER,
+    duplicate_ts INTEGER,
+    non_monotonic_ts INTEGER,
+    time_gap_flag INTEGER,
     source TEXT
 );
 """
@@ -44,8 +45,9 @@ def insert_rows(path: str, rows: Iterable[Dict[str, object]], source: str) -> in
             cur.execute(
                 """
                 INSERT INTO spot_data
-                (ts, pair, mid, bid, ask, open, high, low, close, spread, spread_stress, gap_flag, source)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                (ts, pair, mid, bid, ask, spread_bps, broker, spread, spread_stress, gap_flag,
+                 duplicate_ts, non_monotonic_ts, time_gap_flag, source)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     row["ts"],
@@ -53,13 +55,14 @@ def insert_rows(path: str, rows: Iterable[Dict[str, object]], source: str) -> in
                     row["mid"],
                     row["bid"],
                     row["ask"],
-                    row.get("open"),
-                    row.get("high"),
-                    row.get("low"),
-                    row.get("close"),
+                    row.get("spread_bps"),
+                    row.get("broker"),
                     row.get("spread"),
                     row.get("spread_stress"),
                     1 if row.get("gap_flag") else 0,
+                    1 if row.get("duplicate_ts") else 0,
+                    1 if row.get("non_monotonic_ts") else 0,
+                    1 if row.get("time_gap_flag") else 0,
                     source,
                 ),
             )

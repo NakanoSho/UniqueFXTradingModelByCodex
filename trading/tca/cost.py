@@ -27,6 +27,18 @@ class CostParams:
     gamma_sat: float = 0.20
 
 
+def cost_params_from_config(config) -> CostParams:
+    return CostParams(
+        alpha_spr=1.2,
+        alpha_imp=1.0,
+        buffer_bps=0.1,
+        core_max_bps=config.cost.core_threshold_bps,
+        sat_max_bps=config.cost.sat_threshold_bps,
+        gamma_core=config.cost.gamma_core,
+        gamma_sat=config.cost.gamma_sat,
+    )
+
+
 @dataclass(frozen=True)
 class LiquidityTierParams:
     k_tier_a: float = 50.0
@@ -100,4 +112,3 @@ def tca_throttle(
     if real_cost_avg > 1.2 * exp_cost_avg:
         return smoothing * 0.8, False
     return smoothing, True
-

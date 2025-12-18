@@ -1,0 +1,54 @@
+{
+  "version": "v1_0",
+  "risk_flags": {
+    "fxvol20_off": 12.0,
+    "voljump_off": 1.5,
+    "spreadstress_off": 1.5,
+    "fxvol20_on": 10.0,
+    "voljump_on": 1.2,
+    "spreadstress_on": 1.2
+  },
+  "gates": {
+    "trend": {
+      "spreadstress_max": 1.5,
+      "rawtrend_min": 0.5
+    },
+    "carry": {
+      "raw_min": 0.3,
+      "crash_pnl_5d": -0.025
+    },
+    "value": {
+      "z_val_min": 0.7,
+      "trend_stop": 1.0,
+      "vol_half": 12.0,
+      "vol_stop": 14.0
+    },
+    "satellite": {
+      "raw_min": 1.0,
+      "exit_raw": 0.3,
+      "m1": {
+        "dd_max": 0.04,
+        "month_pnl_min": -0.02
+      },
+      "m2": {
+        "dd_max": 0.02,
+        "spreadstress_max": 1.1,
+        "slip_ratio_max": 1.2
+      }
+    }
+  },
+  "data": {
+    "bars_daily": {
+      "close_time_utc": "23:59:00"
+    },
+    "qc": {
+      "max_gap_seconds": 3600
+    }
+  },
+  "cost": {
+    "core_threshold_bps": 2.0,
+    "sat_threshold_bps": 3.0,
+    "gamma_core": 0.15,
+    "gamma_sat": 0.2
+  }
+}
