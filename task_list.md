@@ -1,4 +1,5 @@
 # Week 0–2 実行タスクリスト（クリーンルーム＋最小インフラ＋監視）
+最終更新: 2025-12-18
 
 ## Definition of Done（Week 0–2）
 - [x] クリーンルーム手順が文書化され、研究・コード・データの出自（provenance）が追跡可能
@@ -124,3 +125,13 @@ DECISIONS.md
    - 実装: `ops/alerts/monitor.py`（判定ロジック）
 3. [x] 再現性テスト：同一日付で再実行して同じ結果になることを確認
    - 実装: `ops/repro/spot_repro.py`
+
+## Week 3 事前修正（受領対応）
+1. [x] Spot I/FをParquet tick想定に合わせる（timestamp/bid/ask/symbol → mid/spread_bps派生）
+   - 実装: `data_pipeline/ingest/spot.py`, `data_pipeline/normalize/spot.py`, `data_pipeline/qc/spot.py`
+2. [x] derived出力のジョブ実装（bars_daily / regime_daily / scores_daily）
+   - 実装: `data_pipeline/pipeline/run_bars_daily.py`, `data_pipeline/pipeline/run_regime_daily.py`, `data_pipeline/pipeline/run_scores_daily.py`
+3. [x] look-ahead防止の結合テスト
+   - 実装: `tests/test_run_week3_daily.py`, `tests/test_derived_daily_integration.py`
+4. [x] v1.0閾値のconfig固定（version管理）
+   - 実装: `configs/v1_0.yaml`, `trading/config.py`
