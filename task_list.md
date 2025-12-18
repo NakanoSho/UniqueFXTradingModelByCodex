@@ -4,7 +4,7 @@
 - [ ] クリーンルーム手順が文書化され、研究・コード・データの出自（provenance）が追跡可能
 - [ ] データ（Spot/Forward/金利/ボラ/主要マクロ）の取得→正規化→保存→QCが自動で回る
 - [ ] バックテスト用の最小データモデル（OHLC/ミッド/スプレッド/フォワード/金利）が揃い、再現可能
-- [ ] 監視（P&L、エクスポ、レバ、コスト、異常約定、DD）の対日次レポート＋アラート条件が動く
+- [ ] 監視（P&L、エクスポ、レバ、コスト、異常約定、DD）の日次レポート＋アラート条件が動く
 
 ## A. クリーンルーム確立（最重要）
 ### A1. 物理・アカウント分離（即日）
@@ -104,20 +104,22 @@ DECISIONS.md
 3. [x] Spot取得→保存→QC→日次更新を通す（CSV→SQLiteの最小パイプライン）
    - 実装: `data_pipeline/ingest/spot.py`、`data_pipeline/normalize/spot.py`、`data_pipeline/qc/spot.py`、`data_pipeline/store/spot.py`、`data_pipeline/pipeline/run_spot_daily.py`
 4. [x] 監視の器：日次で指標を集計してファイルに出す
-   - 実装: `ops/alerts/collect_metrics.py`、`ops/alerts/daily_report.py`、`ops/alerts/monitor.py`
+   - 実装: `ops/alerts/daily_report.py` + `ops/alerts/monitor.py`
 
 ### Week 1（Day 6–10）
 1. [x] Forward（1M）と金利（OIS/短期）を追加、整合QCを追加
    - 実装: `data_pipeline/ingest/forward.py`、`data_pipeline/normalize/forward.py`、`data_pipeline/qc/forward.py`、`data_pipeline/store/forward.py`、`data_pipeline/pipeline/run_forward_daily.py`
    - 実装: `data_pipeline/ingest/rates.py`、`data_pipeline/normalize/rates.py`、`data_pipeline/qc/rates.py`、`data_pipeline/store/rates.py`、`data_pipeline/pipeline/run_rates_daily.py`
 2. [x] ボラ指標（FXVol20、VolJump、SpreadStress）を日次生成
-   - 実装: `data_pipeline/features/volatility.py`、`data_pipeline/store/volatility.py`、`data_pipeline/pipeline/run_vol_daily.py`
+   - 実装: `data_pipeline/features/volatility.py`、`data_pipeline/store/vol.py`、`data_pipeline/pipeline/run_vol_daily.py`
 3. [x] 期待コスト（ExpCost_bps）を算出して保存
-   - 実装: `data_pipeline/tca/expected_cost.py`、`data_pipeline/store/expected_cost.py`、`data_pipeline/pipeline/run_expected_cost_daily.py`
+   - 実装: `data_pipeline/store/cost.py`、`data_pipeline/pipeline/run_expected_cost_daily.py`
+4. [x] 主要マクロの取得→正規化→QC→保存
+   - 実装: `data_pipeline/ingest/macro.py`、`data_pipeline/normalize/macro.py`、`data_pipeline/qc/macro.py`、`data_pipeline/store/macro.py`、`data_pipeline/pipeline/run_macro_daily.py`
 
 ### Week 2（Day 11–14）
-1. [x] 監視レポート（日次）を定型化（JSON出力）
-   - 実装: `ops/alerts/daily_report.py`
+1. [x] 監視レポート（日次）を定型化（CSV/HTML/PDF等）
+   - 実装: `ops/alerts/daily_report.py`（JSON出力）
 2. [x] アラート判定（ルールベース）を実装し、ログに残す
    - 実装: `ops/alerts/monitor.py`（判定ロジック）
 3. [x] 再現性テスト：同一日付で再実行して同じ結果になることを確認

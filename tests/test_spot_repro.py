@@ -7,13 +7,13 @@ import tempfile
 import unittest
 
 
-class TestReproSpot(unittest.TestCase):
-    def test_repro_ok(self):
+class TestSpotRepro(unittest.TestCase):
+    def test_repro(self):
         with tempfile.TemporaryDirectory() as d:
             input_path = os.path.join(d, "spot.csv")
-            out_path = os.path.join(d, "repro.json")
             db1 = os.path.join(d, "spot1.db")
             db2 = os.path.join(d, "spot2.db")
+            log_path = os.path.join(d, "log.json")
             with open(input_path, "w", newline="") as f:
                 writer = csv.DictWriter(f, fieldnames=["ts", "pair", "mid", "bid", "ask"])
                 writer.writeheader()
@@ -31,12 +31,12 @@ class TestReproSpot(unittest.TestCase):
                 "--source",
                 "test",
                 "--log",
-                out_path,
+                log_path,
             ]
             subprocess.check_call(cmd)
-            with open(out_path, "r") as f:
-                data = json.load(f)
-            self.assertTrue(data["hash_match"])
+            with open(log_path, "r") as f:
+                log = json.load(f)
+            self.assertTrue(log["hash_match"])
 
 
 if __name__ == "__main__":
