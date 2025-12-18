@@ -68,4 +68,3 @@ def insert_rows(path: str, rows: Iterable[Dict[str, object]], source: str) -> in
         return count
     finally:
         conn.close()
-

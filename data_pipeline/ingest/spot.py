@@ -30,4 +30,3 @@ def ingest_spot(path: str) -> List[Dict[str, str]]:
     rows = read_spot_csv(path)
     validate_fields(rows)
     return rows
-

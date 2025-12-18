@@ -57,4 +57,3 @@ def qc_spot_rows(rows: List[Dict[str, object]]) -> List[Dict[str, object]]:
             out["gap_flag"] = gap_flag
             output.append(out)
     return output
-

@@ -43,4 +43,3 @@ def build_report(metrics: Dict[str, float], t: AlertThresholds) -> Dict[str, obj
         "alerts": alerts,
         "ok": len(alerts) == 0,
     }
-
