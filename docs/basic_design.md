@@ -220,14 +220,14 @@
 - 攻撃モード（Aggressive）: 通常の1.8倍まで（年率ボラ上限18%）
 - リスク配分: Core 85% / Satellite 15%（リスク予算ベース）
 
-### 10.6.2 攻撃モード稼働条件（ゲート）
+#### 10.6.2 攻撃モード稼働条件（ゲート）
 攻撃モードは全条件OKでのみON:
 1) リスクオフ指標が悪化していない
 2) Core主要シグナルが同方向で整合
 3) 直近DD <= 4%
 4) 当月損益 > -2%
 
-### 10.6.3 DDに応じた強制デリスク
+#### 10.6.3 DDに応じた強制デリスク
 - DD 4%到達: 総リスク -25%
 - DD 6%到達: 総リスク -50%、Satellite停止
 - DD 10%到達: 総リスク -75%
@@ -545,6 +545,10 @@ Risk-Onフラグ（全て）:
 ## 13. 実装状況（v1.0 初期）
 
 ### 13.1 実装済みモジュール
+- `configs/v1_0.yaml`
+  - v1.0固定パラメータ（ゲート閾値、QC、コスト閾値）をJSON互換で管理
+- `trading/config.py`
+  - v1.0設定の読込（リスクフラグ/ゲート/QC/コスト）
 - `trading/signals/scoring.py`
   - Trend / Carry / Value / Satellite のスコア計算、共通関数（winsor/clip/score）
   - Donchian/ATR/ブレイクアウトの基礎計算
@@ -553,15 +557,15 @@ Risk-Onフラグ（全て）:
 - `trading/tca/cost.py`
   - 期待コスト推定（ExpCost_bps）、許容コスト判定、TCA監視による回転抑制
 - `data_pipeline/ingest/spot.py`
-  - Spot CSVの取得（必須カラム検証）
+  - Tick入力（CSV/Parquet）取得、必須フィールド検証（timestamp/bid/ask/symbol or pair）
 - `data_pipeline/normalize/spot.py`
-  - 通貨ペア正規化、型変換
+  - 通貨ペア正規化、UTC時刻パース、mid/spread_bps派生
 - `data_pipeline/qc/spot.py`
-  - 価格ギャップ検知、SpreadStress算出
+  - 価格ギャップ検知、スプレッド異常、時刻重複/非単調/ギャップのフラグ
 - `data_pipeline/store/spot.py`
-  - SQLiteへの保存（最小モデル、DuckDB/Parquetへ置換可能）
+  - SQLiteへの保存（tickモデル: bid/ask/mid/spread_bps + QCフラグ）
 - `data_pipeline/pipeline/run_spot_daily.py`
-  - 日次スポットパイプラインの統合実行
+  - 日次スポットパイプライン（tick→QC→SQLite）
 - `data_pipeline/ingest/forward.py`
   - 1MフォワードCSV取得
 - `data_pipeline/normalize/forward.py`
@@ -582,32 +586,46 @@ Risk-Onフラグ（全て）:
   - 金利保存（SQLite）
 - `data_pipeline/pipeline/run_rates_daily.py`
   - 日次金利パイプライン
+- `data_pipeline/ingest/macro.py`
+  - マクロCSV取得
+- `data_pipeline/normalize/macro.py`
+  - マクロ正規化
+- `data_pipeline/qc/macro.py`
+  - マクロQC
+- `data_pipeline/store/macro.py`
+  - マクロ保存（SQLite）
+- `data_pipeline/pipeline/run_macro_daily.py`
+  - 日次マクロパイプライン
 - `data_pipeline/features/volatility.py`
   - FXVol20/VolJump/SpreadStressの計算
 - `data_pipeline/store/vol.py`
-  - vol_metrics保存（SQLite）
-- `data_pipeline/store/vol_metrics.py`
-  - vol.py互換の保存API
-- `data_pipeline/store/volatility.py`
-  - vol_metrics互換の保存API
+  - ボラ指標の保存（SQLite）
 - `data_pipeline/pipeline/run_vol_daily.py`
   - 日次ボラ指標パイプライン
-- `data_pipeline/pipeline/run_vol_metrics_daily.py`
-  - run_vol_daily互換CLI
 - `data_pipeline/store/cost.py`
-  - expected_costs互換の保存API
-- `data_pipeline/store/expected_cost.py`
   - 期待コストの保存（SQLite）
 - `data_pipeline/pipeline/run_expected_cost_daily.py`
   - 期待コストの算出パイプライン
+- `data_pipeline/derived/bars_daily.py`
+  - tick→bars_daily（日次close・spread中央値/95%）
+- `data_pipeline/derived/regime_daily.py`
+  - bars→regime（FXVol20/VolJump/SpreadStress）
+- `data_pipeline/derived/scores_daily.py`
+  - bars/forward→scores（Trend/Carry/Value）
+- `data_pipeline/pipeline/run_bars_daily.py`
+  - bars_daily生成ジョブ
+- `data_pipeline/pipeline/run_regime_daily.py`
+  - regime_daily生成ジョブ
+- `data_pipeline/pipeline/run_scores_daily.py`
+  - scores_daily生成ジョブ
+- `data_pipeline/pipeline/run_derived_daily.py`
+  - bars→regime→scores の一括日次ジョブ
 - `ops/alerts/monitor.py`
   - 監視アラート判定の最小ロジック
 - `ops/alerts/daily_report.py`
   - 日次レポート（JSON）生成
-- `ops/alerts/run_daily_report.py`
-  - 日次レポート（JSON/CSV）生成
 - `ops/repro/spot_repro.py`
-  - Spotパイプライン再現性チェック
+  - スポットパイプラインの再現性チェック
 
 ### 13.2 テスト
 - `tests/test_scoring.py`
@@ -629,10 +647,26 @@ Risk-Onフラグ（全て）:
 - `tests/test_qc_rates.py`
 - `tests/test_store_rates.py`
 - `tests/test_run_rates_daily.py`
+- `tests/test_ingest_macro.py`
+- `tests/test_normalize_macro.py`
+- `tests/test_qc_macro.py`
+- `tests/test_store_macro.py`
+- `tests/test_run_macro_daily.py`
 - `tests/test_volatility.py`
 - `tests/test_store_vol.py`
 - `tests/test_run_vol_daily.py`
 - `tests/test_store_cost.py`
 - `tests/test_run_expected_cost_daily.py`
 - `tests/test_daily_report.py`
+- `tests/test_spot_repro.py`
 - `tests/test_repro_spot.py`
+- `tests/test_forward_pipeline.py`
+- `tests/test_rates_pipeline.py`
+- `tests/test_vol_metrics.py`
+- `tests/test_expected_cost_pipeline.py`
+- `tests/test_config.py`
+- `tests/test_bars_daily.py`
+- `tests/test_regime_daily.py`
+- `tests/test_scores_daily.py`
+- `tests/test_derived_daily_integration.py`
+- `tests/test_run_week3_daily.py`

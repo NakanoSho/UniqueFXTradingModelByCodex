@@ -1,5 +1,4 @@
 # Week 0–2 実行タスクリスト（クリーンルーム＋最小インフラ＋監視）
-最終更新: 2025-12-18
 
 ## Definition of Done（Week 0–2）
 - [x] クリーンルーム手順が文書化され、研究・コード・データの出自（provenance）が追跡可能
@@ -135,3 +134,15 @@ DECISIONS.md
    - 実装: `tests/test_run_week3_daily.py`, `tests/test_derived_daily_integration.py`
 4. [x] v1.0閾値のconfig固定（version管理）
    - 実装: `configs/v1_0.yaml`, `trading/config.py`
+
+## Week 3 DoD（bars_daily → scores_daily → regime_daily）
+- [x] tick → bars_daily を日次で全ペア生成
+  - 実装: `data_pipeline/derived/bars_daily.py`, `data_pipeline/pipeline/run_bars_daily.py`
+- [x] bars → regime_daily を日次で生成
+  - 実装: `data_pipeline/derived/regime_daily.py`, `data_pipeline/pipeline/run_regime_daily.py`
+- [x] bars/forward → scores_daily を日次で生成
+  - 実装: `data_pipeline/derived/scores_daily.py`, `data_pipeline/pipeline/run_scores_daily.py`
+- [x] look-ahead潰しの結合テスト（1日分）
+  - 実装: `tests/test_derived_daily_integration.py`
+- [x] v1.0パラメータ固定（config＋version）
+  - 実装: `configs/v1_0.yaml`, `trading/config.py`
