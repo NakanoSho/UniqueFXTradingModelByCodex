@@ -1,4 +1,4 @@
-"""Forward data ingestion from CSV."""
+"""Forward data ingestion from CSV to raw rows."""
 
 from __future__ import annotations
 
@@ -26,4 +26,3 @@ def ingest_forward(path: str) -> List[Dict[str, str]]:
     rows = read_forward_csv(path)
     validate_fields(rows)
     return rows
-

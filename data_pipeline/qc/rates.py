@@ -15,4 +15,3 @@ def qc_rates_rows(rows: List[Dict[str, object]], min_rate: float = -0.05, max_ra
         out["rate_flag"] = flag
         output.append(out)
     return output
-

@@ -20,4 +20,3 @@ def normalize_row(row: Dict[str, str]) -> Dict[str, object]:
 
 def normalize_rows(rows: Iterable[Dict[str, str]]) -> List[Dict[str, object]]:
     return [normalize_row(r) for r in rows]
-

@@ -43,8 +43,12 @@ def main() -> int:
             cost_params=cost_params,
             tier_params=tier_params,
         )
-        sleeve = row.get("sleeve", "core").lower()
-        is_sat = sleeve == "satellite"
+        if row.get("is_satellite") is not None and str(row.get("is_satellite")).strip() != "":
+            is_sat = str(row.get("is_satellite")).strip().lower() in ("1", "true", "yes", "y")
+            sleeve = "satellite" if is_sat else "core"
+        else:
+            sleeve = row.get("sleeve", "core").lower()
+            is_sat = sleeve == "satellite"
         allowed = trade_allowed(exp, is_sat, cost_params)
         out_rows.append(
             {

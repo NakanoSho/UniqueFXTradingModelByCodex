@@ -25,4 +25,3 @@ def qc_forward_rows(rows: List[Dict[str, object]], log_ratio_limit: float = 0.2)
         out["forward_flag"] = flag
         output.append(out)
     return output
-

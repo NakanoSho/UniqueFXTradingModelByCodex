@@ -1,4 +1,4 @@
-"""Rates data ingestion from CSV."""
+"""Rates (OIS/short rate) ingestion from CSV to raw rows."""
 
 from __future__ import annotations
 
@@ -26,4 +26,3 @@ def ingest_rates(path: str) -> List[Dict[str, str]]:
     rows = read_rates_csv(path)
     validate_fields(rows)
     return rows
-

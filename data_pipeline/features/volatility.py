@@ -83,3 +83,35 @@ def compute_spread_stress(by_pair: Dict[str, List[Tuple[str, float, float]]]) ->
         return 0.0
     return statistics.median(stresses)
 
+
+def compute_vol_metrics(rows: List[Dict[str, object]]) -> List[Dict[str, object]]:
+    by_pair: Dict[str, List[Tuple[str, float, float]]] = {}
+    for row in rows:
+        pair = str(row["pair"])
+        by_pair.setdefault(pair, []).append(
+            (
+                str(row["ts"]),
+                float(row["mid"]),
+                float(row.get("spread_stress", 1.0)),
+            )
+        )
+
+    # Compute per timestamp medians
+    ts_set = set()
+    for series in by_pair.values():
+        for ts, _, _ in series:
+            ts_set.add(ts)
+    output: List[Dict[str, object]] = []
+    for ts in sorted(ts_set):
+        fxvol20 = compute_fxvol20(by_pair)
+        voljump = compute_voljump(by_pair)
+        spread_stress = compute_spread_stress(by_pair)
+        output.append(
+            {
+                "ts": ts,
+                "fxvol20": fxvol20,
+                "voljump": voljump,
+                "spread_stress": spread_stress,
+            }
+        )
+    return output

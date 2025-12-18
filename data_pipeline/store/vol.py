@@ -46,4 +46,3 @@ def insert_row(path: str, row: Dict[str, object], source: str) -> None:
         conn.commit()
     finally:
         conn.close()
-

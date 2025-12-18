@@ -1,4 +1,4 @@
-"""Store rates rows into SQLite."""
+"""Store rate rows into SQLite."""
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS rates_data (
     ts TEXT NOT NULL,
     ccy TEXT NOT NULL,
     ois_1m REAL NOT NULL,
-    rate_flag INTEGER,
+    qc_flag INTEGER,
     source TEXT
 );
 """
@@ -36,14 +36,14 @@ def insert_rows(path: str, rows: Iterable[Dict[str, object]], source: str) -> in
             cur.execute(
                 """
                 INSERT INTO rates_data
-                (ts, ccy, ois_1m, rate_flag, source)
+                (ts, ccy, ois_1m, qc_flag, source)
                 VALUES (?, ?, ?, ?, ?)
                 """,
                 (
                     row["ts"],
                     row["ccy"],
                     row["ois_1m"],
-                    1 if row.get("rate_flag") else 0,
+                    1 if row.get("qc_flag") else 0,
                     source,
                 ),
             )
@@ -52,4 +52,3 @@ def insert_rows(path: str, rows: Iterable[Dict[str, object]], source: str) -> in
         return count
     finally:
         conn.close()
-

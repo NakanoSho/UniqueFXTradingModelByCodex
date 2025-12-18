@@ -1,4 +1,4 @@
-"""Normalize rates rows to canonical schema."""
+"""Normalize rate rows to canonical schema."""
 
 from __future__ import annotations
 
@@ -19,4 +19,3 @@ def normalize_row(row: Dict[str, str]) -> Dict[str, object]:
 
 def normalize_rows(rows: Iterable[Dict[str, str]]) -> List[Dict[str, object]]:
     return [normalize_row(r) for r in rows]
-

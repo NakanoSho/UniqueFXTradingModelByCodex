@@ -1,4 +1,4 @@
-"""Store expected cost estimates into SQLite."""
+"""Store expected execution cost rows into SQLite (expected_costs)."""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS expected_costs (
     pair TEXT NOT NULL,
     sleeve TEXT NOT NULL,
     exp_cost_bps REAL NOT NULL,
-    trade_allowed INTEGER,
+    trade_allowed INTEGER NOT NULL,
     source TEXT
 );
 """
@@ -36,7 +36,8 @@ def insert_rows(path: str, rows: Iterable[Dict[str, object]], source: str) -> in
         for row in rows:
             cur.execute(
                 """
-                INSERT INTO expected_costs (ts, pair, sleeve, exp_cost_bps, trade_allowed, source)
+                INSERT INTO expected_costs
+                (ts, pair, sleeve, exp_cost_bps, trade_allowed, source)
                 VALUES (?, ?, ?, ?, ?, ?)
                 """,
                 (
@@ -53,4 +54,3 @@ def insert_rows(path: str, rows: Iterable[Dict[str, object]], source: str) -> in
         return count
     finally:
         conn.close()
-

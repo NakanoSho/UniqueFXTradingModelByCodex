@@ -220,14 +220,14 @@
 - 攻撃モード（Aggressive）: 通常の1.8倍まで（年率ボラ上限18%）
 - リスク配分: Core 85% / Satellite 15%（リスク予算ベース）
 
-#### 10.6.2 攻撃モード稼働条件（ゲート）
+### 10.6.2 攻撃モード稼働条件（ゲート）
 攻撃モードは全条件OKでのみON:
 1) リスクオフ指標が悪化していない
 2) Core主要シグナルが同方向で整合
 3) 直近DD <= 4%
 4) 当月損益 > -2%
 
-#### 10.6.3 DDに応じた強制デリスク
+### 10.6.3 DDに応じた強制デリスク
 - DD 4%到達: 総リスク -25%
 - DD 6%到達: 総リスク -50%、Satellite停止
 - DD 10%到達: 総リスク -75%
@@ -541,6 +541,7 @@ Risk-Onフラグ（全て）:
     - 平滑化係数 ρ を20%引下げ
     - SatelliteのM2ゲート停止（M1まで）
 
+
 ## 13. 実装状況（v1.0 初期）
 
 ### 13.1 実装済みモジュール
@@ -584,10 +585,18 @@ Risk-Onフラグ（全て）:
 - `data_pipeline/features/volatility.py`
   - FXVol20/VolJump/SpreadStressの計算
 - `data_pipeline/store/vol.py`
-  - ボラ指標の保存（SQLite）
+  - vol_metrics保存（SQLite）
+- `data_pipeline/store/vol_metrics.py`
+  - vol.py互換の保存API
+- `data_pipeline/store/volatility.py`
+  - vol_metrics互換の保存API
 - `data_pipeline/pipeline/run_vol_daily.py`
   - 日次ボラ指標パイプライン
+- `data_pipeline/pipeline/run_vol_metrics_daily.py`
+  - run_vol_daily互換CLI
 - `data_pipeline/store/cost.py`
+  - expected_costs互換の保存API
+- `data_pipeline/store/expected_cost.py`
   - 期待コストの保存（SQLite）
 - `data_pipeline/pipeline/run_expected_cost_daily.py`
   - 期待コストの算出パイプライン
@@ -595,6 +604,8 @@ Risk-Onフラグ（全て）:
   - 監視アラート判定の最小ロジック
 - `ops/alerts/daily_report.py`
   - 日次レポート（JSON）生成
+- `ops/alerts/run_daily_report.py`
+  - 日次レポート（JSON/CSV）生成
 
 ### 13.2 テスト
 - `tests/test_scoring.py`
@@ -622,7 +633,3 @@ Risk-Onフラグ（全て）:
 - `tests/test_store_cost.py`
 - `tests/test_run_expected_cost_daily.py`
 - `tests/test_daily_report.py`
-- `tests/test_forward_pipeline.py`
-- `tests/test_rates_pipeline.py`
-- `tests/test_vol_metrics.py`
-- `tests/test_expected_cost_pipeline.py`
