@@ -1,0 +1,4 @@
+version: 1
+sources: []
+transforms: []
+notes: "Populate with data source provenance entries (provider, license, acquisition method, timestamps, storage location)."
